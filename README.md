@@ -182,6 +182,27 @@ To train on a single GPU machine, use `CUDA_VISIBLE_DEVICES=0 python -m ...` ins
 We use [Weights and Biases](https://wandb.ai/site) for experiment logging. You need to configure the weights and biases in your environment.
 To train on local dataset, please change the `--remotedata` in training scripts (see [experiment_scripts](./experiment_scripts) folder) with `--datasetpath <your dir to datasets>`.
 
+## Underwater target recognition quick adaptation
+
+For underwater target recognition, start from a small closed-loop adaptation before full finetuning:
+
+1. **Sanity check audio-text alignment** with one underwater audio:
+```bash
+cd /home/runner/work/CLAP/CLAP
+PYTHONPATH=/home/runner/work/CLAP/CLAP/src python -m laion_clap.evaluate.underwater_sanity_check \
+  --audio-file /path/to/sample.wav \
+  --class-label-path /home/runner/work/CLAP/CLAP/class_labels/Underwater_class_labels_indices_space_template.json \
+  --prompt-template "This is an underwater sound of {}."
+```
+
+2. **Run zero-shot evaluation template**:
+`/home/runner/work/CLAP/CLAP/experiment_scripts/underwater_zeroshot_template.sh`
+
+3. **Run linear-probe template** (recommended first training stage):
+`/home/runner/work/CLAP/CLAP/experiment_scripts/underwater_linear_probe_template.sh`
+
+4. **Align your data to webdataset format** expected by `training/data.py`, where each sample carries audio and labels (`tag`) and class labels are given by a JSON mapping `{label_name: index}`.
+
 ## Core Code
 Please refer to [main.py](https://github.com/LAION-AI/CLAP/blob/laion_clap_pip/src/laion_clap/training/main.py), [train.py](https://github.com/LAION-AI/CLAP/blob/laion_clap_pip/src/laion_clap/training/train.py), [data.py](https://github.com/LAION-AI/CLAP/blob/laion_clap_pip/src/laion_clap/training/data.py),and [model.py](https://github.com/LAION-AI/CLAP/blob/laion_clap_pip/src/laion_clap/clap_module/model.py) to quicly get familiar with our model.
 

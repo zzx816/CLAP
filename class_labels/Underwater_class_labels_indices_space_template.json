@@ -1,0 +1,9 @@
+{
+  "ship noise": 0,
+  "propeller cavitation": 1,
+  "sonar ping": 2,
+  "marine mammal": 3,
+  "fish chorus": 4,
+  "machinery": 5,
+  "background ocean noise": 6
+}
