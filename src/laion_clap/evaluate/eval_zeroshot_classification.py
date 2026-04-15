@@ -46,7 +46,9 @@ def evaluate_zeroshot(model, data, start_epoch, args, writer):
         metrics["num_samples"] = all_audio_features.shape[0]
 
         # get text features
-        if args.val_dataset_names == ['GTZAN']:
+        if args.prompt_template is not None:
+            all_texts = [args.prompt_template.format(t) for t in args.class_index_dict.keys()]
+        elif args.val_dataset_names == ['GTZAN']:
             all_texts = [f"This is a {t} song." for t in args.class_index_dict.keys()]
         else:
             all_texts = [f"This is a sound of {t}." for t in args.class_index_dict.keys()]

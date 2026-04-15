@@ -18,5 +18,6 @@ python -m evaluate.eval_zeroshot_classification \
   --data-filling "repeatpad" \
   --data-truncating "rand_trunc" \
   --freeze-text \
+  --prompt-template "This is an underwater sound of {}." \
   --class-label-path="../class_labels/Underwater_class_labels_indices_space_template.json" \
   --pretrained="/path/to/your/checkpoint/or/checkpoint_dir"

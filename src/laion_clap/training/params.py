@@ -555,6 +555,12 @@ def parse_args():
         default=None,
         help="The prefetch factor for dataloader. Larger value will use more memory and CPU but faster.",
     )
+    parser.add_argument(
+        "--prompt-template",
+        type=str,
+        default=None,
+        help="Prompt template for zero-shot text labels, use {} as class placeholder.",
+    )
 
     args = parser.parse_args()
 
