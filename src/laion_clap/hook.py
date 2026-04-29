@@ -72,7 +72,7 @@ class CLAP_Module(torch.nn.Module):
         )
         return result
 
-    def load_ckpt(self, ckpt = None, model_id = -1, verbose = True):
+    def load_ckpt(self, ckpt = None, model_id = -1, verbose = True, download_root = None):
         """Load the pretrained checkpoint of CLAP model
 
         Parameters
@@ -86,7 +86,9 @@ class CLAP_Module(torch.nn.Module):
                 id = 1 --> 630k+audioset non-fusion ckpt \n
                 id = 2 --> 630k fusion ckpt \n
                 id = 3 --> 630k+audioset fusion ckpt \n
-            Note that if your model is specied as non-fusion model but you download a fusion model ckpt, you will face an error.
+            Note that if your model is specified as non-fusion model but you download a fusion model ckpt, you will face an error.
+        download_root: str, optional
+            directory to download the checkpoint into when ckpt is not specified. Defaults to the package directory.
         """
         download_link = 'https://huggingface.co/lukewys/laion_clap/resolve/main/'
         download_names = [
@@ -103,12 +105,21 @@ class CLAP_Module(torch.nn.Module):
                 model_id = 3 if self.enable_fusion else 1
             package_dir = os.path.dirname(os.path.realpath(__file__))
             weight_file_name = download_names[model_id]
-            ckpt = os.path.join(package_dir, weight_file_name)
+            if download_root is None:
+                download_root = package_dir
+            else:
+                download_root = os.path.expanduser(download_root)
+                if os.path.isfile(download_root):
+                    raise ValueError(
+                        f'download_root must be a directory, but {download_root} is an existing file'
+                    )
+                os.makedirs(download_root, exist_ok=True)
+            ckpt = os.path.join(download_root, weight_file_name)
             if os.path.exists(ckpt):
                 logging.info(f'The checkpoint is already downloaded')
             else:
                 logging.info('Downloading laion_clap weight files...')
-                ckpt = wget.download(download_link + weight_file_name, os.path.dirname(ckpt))
+                ckpt = wget.download(download_link + weight_file_name, download_root)
                 logging.info('Download completed!')
         logging.info('Load Checkpoint...')
         ckpt = load_state_dict(ckpt, skip_params=True)

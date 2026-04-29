@@ -61,6 +61,7 @@ def float32_to_int16(x):
 
 model = laion_clap.CLAP_Module(enable_fusion=False)
 model.load_ckpt() # download the default pretrained checkpoint.
+model.load_ckpt(download_root="/path/to/checkpoints") # download to a local directory.
 
 # Directly get audio embeddings from audio files
 audio_file = [
@@ -113,6 +114,12 @@ print(text_embed.shape)
 The pretrained checkpoints can be found in [here](https://huggingface.co/lukewys/laion_clap/tree/main).
 Please refer to the previous section for how to load and run the checkpoints.
 For the PyPI library, [630k-audioset-best.pt](https://huggingface.co/lukewys/laion_clap/blob/main/630k-audioset-best.pt) and [630k-audioset-fusion-best.pt](https://huggingface.co/lukewys/laion_clap/blob/main/630k-audioset-fusion-best.pt) are our default models (non-fusion and fusion)
+
+If you want to download a checkpoint to a local folder for offline use, pass `download_root` to `load_ckpt` and reuse the local path later with `ckpt`:
+```python
+model.load_ckpt(download_root="/path/to/checkpoints")
+model.load_ckpt(ckpt="/path/to/checkpoints/630k-audioset-best.pt")
+```
 
 We further provide below pretrained models according to your usages:
 
