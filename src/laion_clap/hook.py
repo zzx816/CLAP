@@ -109,7 +109,7 @@ class CLAP_Module(torch.nn.Module):
                 download_root = package_dir
             else:
                 download_root = os.path.expanduser(download_root)
-                if os.path.exists(download_root) and not os.path.isdir(download_root):
+                if os.path.isfile(download_root):
                     raise ValueError(
                         f'download_root must be a directory, but {download_root} is an existing file'
                     )
