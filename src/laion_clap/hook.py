@@ -87,7 +87,7 @@ class CLAP_Module(torch.nn.Module):
                 id = 2 --> 630k fusion ckpt \n
                 id = 3 --> 630k+audioset fusion ckpt \n
             Note that if your model is specied as non-fusion model but you download a fusion model ckpt, you will face an error.
-        download_root: str | None
+        download_root: str, optional
             directory to download the checkpoint into when ckpt is not specified. Defaults to the package directory.
         """
         download_link = 'https://huggingface.co/lukewys/laion_clap/resolve/main/'
@@ -109,12 +109,11 @@ class CLAP_Module(torch.nn.Module):
                 download_root = package_dir
             else:
                 download_root = os.path.expanduser(download_root)
-                if os.path.exists(download_root):
-                    if not os.path.isdir(download_root):
-                        raise ValueError(
-                            f'download_root must be a directory, but {download_root} is an existing file'
-                        )
-                else:
+                if os.path.exists(download_root) and not os.path.isdir(download_root):
+                    raise ValueError(
+                        f'download_root must be a directory, but {download_root} is an existing file'
+                    )
+                if not os.path.exists(download_root):
                     os.makedirs(download_root)
             ckpt = os.path.join(download_root, weight_file_name)
             if os.path.exists(ckpt):
