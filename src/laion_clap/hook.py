@@ -111,9 +111,11 @@ class CLAP_Module(torch.nn.Module):
                 download_root = os.path.expanduser(download_root)
                 if os.path.exists(download_root):
                     if not os.path.isdir(download_root):
-                        raise ValueError(f'download_root must be a directory, got {download_root}')
+                        raise ValueError(
+                            f'download_root must be a directory, but {download_root} is an existing file'
+                        )
                 else:
-                    os.makedirs(download_root, exist_ok=True)
+                    os.makedirs(download_root)
             ckpt = os.path.join(download_root, weight_file_name)
             if os.path.exists(ckpt):
                 logging.info(f'The checkpoint is already downloaded')
